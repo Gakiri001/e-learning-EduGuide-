@@ -1,0 +1,64 @@
+SERVER
+i. npm init -y
+ii. npm i --save-dev nodemon
+iii. npm i bcryptjs cloudinary cors express mongoose dotenv jsonwebtoken multer paypal-rest-sdk
+NB: Remember to check/compare the Teach2Give Set-up for backend
+
+Database
+i. Sign in to your MongoDB Account
+ii. Create a new project. Name it.
+iii. Create a cluster. Use the free billing. And create Deployment
+
+
+CLIENT
+i. npm install -D tailwindcss postcss autoprefixer
+ii. npx tailwindcss init -p
+iii. Replace the content in tailwind.config.js
+   content: [
+    "./index.html", 
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+from 'https://tailwindcss.com/docs/installation' website
+iv. create a file called 'jsconfig.json' and paste:
+{
+ "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+from 'https://ui.shadcn.com/docs/installation/vite' website No. 3
+
+v. Replace vite.config.js with:
+import path from "path"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})
+from 'https://ui.shadcn.com/docs/installation/vite' website No. 5
+
+vi. Run the CLI
+Run the shadcn-ui init command to setup your project:
+
+npx shadcn@latest init
+component.json file will be included in the client folder
+
+from 'https://ui.shadcn.com/docs/installation/vite' website No. 6
+
+vii. You can now start adding components to your project.
+
+npx shadcn@latest add button
+creates a component folder with button.jsx in the src
+
+from 'https://ui.shadcn.com/docs/installation/vite' website No. 8
+
+viii. An error occured when i tried to run the site 'npm run dev'.
+Solution: I had to manually install the 'plugin-react' through: 'npm install @vitejs/plugin-react --save-dev' command
