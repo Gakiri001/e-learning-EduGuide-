@@ -1,12 +1,11 @@
-import { Button } from './components/ui/button'
+import { Button } from "./components/ui/button";
 
 function App() {
-
   return (
     <>
-    <Button className="bg-red-600">Check</Button>
+      <Button className="bg-red-600">Check</Button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

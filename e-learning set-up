@@ -3,11 +3,17 @@ i. npm init -y
 ii. npm i --save-dev nodemon
 iii. npm i bcryptjs cloudinary cors express mongoose dotenv jsonwebtoken multer paypal-rest-sdk
 NB: Remember to check/compare the Teach2Give Set-up for backend
+iv. Create a gitignore file in the main server folder. Pass the node_modules and .env
+v. Create a .env(already passed in the gitignore). 
 
 Database
 i. Sign in to your MongoDB Account
 ii. Create a new project. Name it.
 iii. Create a cluster. Use the free billing. And create Deployment
+iv. Connect to cluster. username and password will be provided.
+v. connect -> MongoDB for Vscode. Connect to your MongoDB deployment and paste the MONGO_DB URI(in the env file)
+mongodb+srv://gakirijulius:<db_password>@cluster0.e24md.mongodb.net/
+Remember to change the password
 
 
 CLIENT
