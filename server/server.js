@@ -22,7 +22,7 @@ mongoose
   .then(() => console.log("MongoDB is connected"))
   .catch((e) => console.log(e));
 
-  //routes configuration
+//routes configuration
 
 //Global Error handler
 app.use((err, req, res, next) => {

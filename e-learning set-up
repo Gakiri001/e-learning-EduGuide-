@@ -68,3 +68,9 @@ from 'https://ui.shadcn.com/docs/installation/vite' website No. 8
 
 viii. An error occured when i tried to run the site 'npm run dev'.
 Solution: I had to manually install the 'plugin-react' through: 'npm install @vitejs/plugin-react --save-dev' command
+
+
+
+Sign-in & Sign-up Tabs
+'npx shadcn@latest add tabs' command on the client side
+
