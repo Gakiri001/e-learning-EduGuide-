@@ -1,3 +1,5 @@
+import CommonForm from "@/components/common-form";
+import { SigninFormControls, SignupFormControls } from "@/config";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { GraduationCap } from "lucide-react";
 import { useState } from "react";
@@ -6,8 +8,8 @@ import { Link } from "react-router-dom";
 function AuthPage() {
   const [ActiveTab, setActiveTab] = useState("signin");
 
-  function handleTabChange(value){
-    setActiveTab(value)
+  function handleTabChange(value) {
+    setActiveTab(value);
   }
 
   return (
@@ -26,18 +28,25 @@ function AuthPage() {
           className="w-full max-w-md"
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger 
-            value="signin" 
-            className="px-2 py-2 text-center font-semibold text-gray-600 transition-all data-[state=active]:bg-gray-300 data-[state=active]:text-gray-900">
+            <TabsTrigger
+              value="signin"
+              className="px-2 py-2 text-center font-semibold text-gray-600 transition-all data-[state=active]:bg-gray-300 data-[state=active]:text-gray-900"
+            >
               Sign In
             </TabsTrigger>
-            <TabsTrigger 
-            value="signup"
-            className="px-4 py-2 text-center font-semibold text-gray-600 transition-all data-[state=active]:bg-gray-300 data-[state=active]:text-gray-900"
-            >Sign Up</TabsTrigger>
+            <TabsTrigger
+              value="signup"
+              className="px-4 py-2 text-center font-semibold text-gray-600 transition-all data-[state=active]:bg-gray-300 data-[state=active]:text-gray-900"
+            >
+              Sign Up
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="signin">Signin</TabsContent>
-          <TabsContent value="signup">Signup</TabsContent>
+          <TabsContent value="signin">
+            <CommonForm formControls={SigninFormControls} />
+          </TabsContent>
+          <TabsContent value="signup">
+            <CommonForm formControls={SignupFormControls} />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
