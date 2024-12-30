@@ -8,3 +8,13 @@ export async function registerService(formData) {
 
   return data;
 }
+
+export async function logInService(formData) {
+  const data = await axiosInstance.post("/auth/login", formData);
+  return data;
+}
+
+export async function checkAuth() {
+  const data = await axiosInstance.get("/auth/check-auth");
+  return data;
+}
