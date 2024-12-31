@@ -2,32 +2,35 @@ import { InitialSignInFormData, InitialSignUpFormData } from "@/config";
 import { logInService, registerService } from "@/services";
 import { createContext, useState } from "react";
 
-export const AuthContext = createContext(null);
+const AuthContext = createContext(null);
 
-export default function AuthProvider({ children }) {
+function AuthProvider({ children }) {
   const [signInFormData, setSignInFormData] = useState(InitialSignInFormData);
   const [signUpFormData, setSignUpFormData] = useState(InitialSignUpFormData);
   const [auth, setAuth] = useState({
     authenticate: false,
-    user: null
-  })
+    user: null,
+  });
 
   async function handleRegisterUser(event) {
     event.preventDefault();
     const data = await registerService(signUpFormData);
 
-    console.log(data);
+    console.log("New User", data);
   }
 
-  async function handleLoginUser(event){
-    event.preventDefault()
-    const data = await logInService(signInFormData)
+  async function handleLoginUser(event) {
+    event.preventDefault();
+    const data = await logInService(signInFormData);
 
-    if(data.success){
+    if (data.data.success) {
+      console.log("dataaaaaa", data);
+      console.log("user", data.data.data.user);
+      sessionStorage.setItem("accessToken", data.data.data.accessToken);
       setAuth({
         authenticate: true,
-        user: data.user
-      })
+        user: data.data.data.user,
+      });
     }
   }
 
@@ -46,3 +49,6 @@ export default function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+export { AuthContext };
+export default AuthProvider;

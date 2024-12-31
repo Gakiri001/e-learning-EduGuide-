@@ -42,8 +42,6 @@ function AuthPage() {
     );
   }
 
-  console.log(signInFormData);
-
   function handleTabChange(value) {
     setActiveTab(value);
   }
