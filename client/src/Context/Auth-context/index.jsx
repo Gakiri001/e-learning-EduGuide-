@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { InitialSignInFormData, InitialSignUpFormData } from "@/config";
 import { checkAuthService, logInService, registerService } from "@/services";
 import { createContext, useEffect, useState } from "react";
@@ -65,9 +66,14 @@ function AuthProvider({ children }) {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Failed to check authentication", error);
-      setAuth({ authenticate: false, user: null });
-      setLoading(false);
+      console.log(error);
+      if (!error?.response?.data?.success) {
+        setAuth({
+          authenticate: false,
+          user: null,
+        });
+        setLoading(false);
+      }
     }
   }
 
@@ -90,7 +96,7 @@ function AuthProvider({ children }) {
         setAuth,
       }}
     >
-      {children}
+      {loading ? <Skeleton /> : children}
     </AuthContext.Provider>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 
 function InstructorDashboardPage() {
-  return <div>InstructorDashboardPage</div>;
+  return <div className="flex flex-col "></div>;
 }
 
 export default InstructorDashboardPage;
