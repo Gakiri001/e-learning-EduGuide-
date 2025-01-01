@@ -12,6 +12,8 @@ function AuthProvider({ children }) {
     user: null,
   });
 
+  const [loading, setLoading] = useState(true);
+
   async function handleRegisterUser(event) {
     event.preventDefault();
     const data = await registerService(signUpFormData);
@@ -54,15 +56,18 @@ function AuthProvider({ children }) {
           authenticate: true,
           user: data.data.data.user,
         });
+        setLoading(false);
       } else {
         setAuth({
           authenticate: false,
           user: null,
         });
+        setLoading(false);
       }
     } catch (error) {
       console.error("Failed to check authentication", error);
       setAuth({ authenticate: false, user: null });
+      setLoading(false);
     }
   }
 

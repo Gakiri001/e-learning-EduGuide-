@@ -17,7 +17,7 @@ function App() {
         element={
           <RouteGuard
             element={<AuthPage />}
-            authenticated={auth?.authenticated}
+            authenticated={auth?.authenticate}
             user={auth?.user}
           />
         }
@@ -27,7 +27,7 @@ function App() {
         element={
           <RouteGuard
             element={<InstructorDashboardPage />}
-            authenticated={auth?.authenticated}
+            authenticated={auth?.authenticate}
             user={auth?.user}
           />
         }
@@ -38,13 +38,13 @@ function App() {
         element={
           <RouteGuard
             element={<StudentViewCommonLayout />}
-            authenticated={auth?.authenticated}
+            authenticated={auth?.authenticate}
             user={auth?.user}
           />
         }
       >
-        <Route path="home" element={<StudentHomePage />} />
-        <Route path="" element={<StudentHomePage />} />
+        <Route path="/home" element={<StudentHomePage />} />
+        <Route path="/" element={<StudentHomePage />} />
       </Route>
     </Routes>
   );

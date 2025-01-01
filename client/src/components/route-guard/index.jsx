@@ -1,25 +1,30 @@
-import { useContext, Fragment } from "react";
 import { useLocation, Navigate } from "react-router-dom";
-import { AuthContext } from "@/Context/Auth-context";
+import { Fragment } from "react";
 
-function RouteGuard({ element }) {
-  const { auth } = useContext(AuthContext);
+function RouteGuard({ authenticated, user, element }) {
   const location = useLocation();
 
-  if (!auth.authenticate) {
-    return location.pathname.includes("/auth") ? (
-      <Fragment>{element}</Fragment>
-    ) : (
-      <Navigate to="/auth" />
-    );
+  console.log("authenticated", authenticated);
+
+  if (!authenticated && !location.pathname.includes("/auth")) {
+    return <Navigate to="/auth" />;
   }
 
-  if (auth.user?.role === "instructor") {
-    if (!location.pathname.includes("instructor")) {
-      return <Navigate to="/instructor" />;
-    }
-  } else if (location.pathname.includes("instructor")) {
+  if (
+    authenticated &&
+    user?.role !== "instructor" &&
+    (location.pathname.includes("instructor") ||
+      location.pathname.includes("/auth"))
+  ) {
     return <Navigate to="/home" />;
+  }
+
+  if (
+    authenticated &&
+    user.role === "instructor" &&
+    !location.pathname.includes("instructor")
+  ) {
+    return <Navigate to="/instructor" />;
   }
 
   return <Fragment>{element}</Fragment>;
