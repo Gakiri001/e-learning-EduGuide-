@@ -11,13 +11,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Delete, Edit } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function InstructorCourses() {
+  const navigate = useNavigate();
+
   return (
     <Card>
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold">All Courses</CardTitle>
-        <Button>Create New Courses</Button>
+        <Button onClick={() => navigate("/instructor/create-new-course")}>
+          Create New Courses
+        </Button>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto ">
