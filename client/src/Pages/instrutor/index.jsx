@@ -2,12 +2,14 @@ import InstructorCourses from "@/components/instructor-view/courses";
 import InstructorDashboard from "@/components/instructor-view/dashboard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { AuthContext } from "@/Context/Auth-context";
 import { Value } from "@radix-ui/react-select";
 import { BarChart, Book, Component, icons, LogOut } from "lucide-react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 function InstructorDashboardPage() {
-  const [activeTabs, setActiveTabs] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const { resetCredentials } = useContext(AuthContext);
 
   const menuItems = [
     {
@@ -30,10 +32,13 @@ function InstructorDashboardPage() {
     },
   ];
 
-  function handleLogout() {}
+  function handleLogout() {
+    resetCredentials();
+    sessionStorage.clear();
+  }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex h-full min-h-screen bg-gray-100">
       <aside className="w-64 bg-white shadow-md hidden md:block">
         <div className="p-4">
           <h2 className="text-2xl font-bold mb-4">Instructor View</h2>
@@ -42,10 +47,11 @@ function InstructorDashboardPage() {
               <Button
                 className="w-full justify-start mb-2"
                 key={menuItems.value}
+                variant={activeTab === menuItems.value ? "secondary" : "ghost"}
                 onClick={
                   menuItems.value === "logout"
                     ? handleLogout
-                    : () => setActiveTabs(menuItems.value)
+                    : () => setActiveTab(menuItems.value)
                 }
               >
                 <menuItems.icon className="mr-2 h-4 w-4" />
@@ -55,10 +61,10 @@ function InstructorDashboardPage() {
           </nav>
         </div>
       </aside>
-      <main className="flex-2 p-8 overflow-y-auto">
+      <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
-          <Tabs value={activeTabs} onValueChange={setActiveTabs}>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
             {menuItems.map((menuItems) => (
               <TabsContent value={menuItems.value}>
                 {menuItems.component !== null ? menuItems.component : null}
