@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth-routes/index");
+const mediaRoutes = require("./routes/instructor-routes/media-routes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,7 +27,8 @@ mongoose
   .catch((e) => console.log(e));
 
 //routes configuration
-app.use("/auth", authRoutes); //commented Bcoz no middleware is available!!!
+app.use("/auth", authRoutes);
+app.use("/media", mediaRoutes);
 
 //Global Error handler
 app.use((err, req, res, next) => {
