@@ -80,7 +80,7 @@ function CourseCurriculum() {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row justify-between">
         <CardTitle>Create Course Curriculum</CardTitle>
       </CardHeader>
       <CardContent>
@@ -91,7 +91,7 @@ function CourseCurriculum() {
             progress={mediaUploadProgressPercentage}
           />
         ) : null}
-        <div className="mt-4 space-y-3 ">
+        <div className="mt-4 space-y-4 ">
           {courseCurriculumFormData.map((curriculumItem, index) => (
             <div className="border p-5 rounded-md">
               <div className="flex gap-5 items-center">
@@ -111,7 +111,7 @@ function CourseCurriculum() {
                     checked={courseCurriculumFormData[index]?.freePreview}
                     id={`freePreview-${index + 1}`}
                   />
-                  <Label htmlform={`freePreview-${index + 1}`}>
+                  <Label htmlFor={`freePreview-${index + 1}`}>
                     Free Preview
                   </Label>
                 </div>
@@ -122,7 +122,6 @@ function CourseCurriculum() {
                   accept="video/*"
                   onChange={(event) => handleSingleLectureUpload(event, index)}
                   className="mb-4"
-                  placeholder="Select videos"
                 />
               </div>
             </div>
