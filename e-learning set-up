@@ -69,7 +69,9 @@ from 'https://ui.shadcn.com/docs/installation/vite' website No. 8
 viii. An error occured when i tried to run the site 'npm run dev'.
 Solution: I had to manually install the 'plugin-react' through: 'npm install @vitejs/plugin-react --save-dev' command
 
-ix. npm i framer-motion - for media progress tracking
+ix. npm i framer-motion -> for media progress tracking
+
+x. npm i react-player -> For video player view
 
 
 
