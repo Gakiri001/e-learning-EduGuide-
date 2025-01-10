@@ -82,4 +82,8 @@ ERRORS ENCOUNTED
 //In the services file encode the variable data in an array/object format {data} to allow easier destructuring in the AuthContext file 'data.success'
 //Tailwind styling mastering
 //Router-Guard navigation
+//State Management hooks
+//variables re-naming
+//mapping
+//conitional rendering
 
