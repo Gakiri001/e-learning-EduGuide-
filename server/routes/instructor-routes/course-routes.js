@@ -1,7 +1,7 @@
 const express = require("express")
 const {addNewCourse, getAllCourses,getCourseDetailsByID, updateCourseById} = require("../../controllers/instructor-controller/course-controller")
 
-const router = express.router()
+const router = express.Router()
 router.post("/add", addNewCourse )
 router.get("/get", getAllCourses)
 router.get("/get/details/:id", getCourseDetailsByID)
