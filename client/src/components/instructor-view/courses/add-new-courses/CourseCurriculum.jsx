@@ -77,32 +77,37 @@ function CourseCurriculum() {
     }
   }
 
-  function isCourseCurriculumFormDataValid () {
-    return courseCurriculumFormData.every(item=>{
-      return item && typeof item ==='object' &&
-      item.title.trim() !== '' &&
-      item.videoUrl.trim() !== ''
-    })
+  function isCourseCurriculumFormDataValid() {
+    return courseCurriculumFormData.every((item) => {
+      return (
+        item &&
+        typeof item === "object" &&
+        item.title.trim() !== "" &&
+        item.videoUrl.trim() !== ""
+      );
+    });
   }
 
   async function handleReplaceVideo(currentIndex) {
     let copycourseCurriculumFormData = [...courseCurriculumFormData];
-    const getCurrentVideoPublicID = copycourseCurriculumFormData[currentIndex].publicID
+    const getCurrentVideoPublicID =
+      copycourseCurriculumFormData[currentIndex].publicID;
 
-    const deleteCurrentMediaResponse = await mediaDeleteService(getCurrentVideoPublicID);
+    const deleteCurrentMediaResponse = await mediaDeleteService(
+      getCurrentVideoPublicID,
+    );
 
-    console.log('deleteCurrentMediaResponse', deleteCurrentMediaResponse);
+    console.log("deleteCurrentMediaResponse", deleteCurrentMediaResponse);
 
-    if(deleteCurrentMediaResponse?.success){
-      copycourseCurriculumFormData[currentIndex] ={
+    if (deleteCurrentMediaResponse?.success) {
+      copycourseCurriculumFormData[currentIndex] = {
         ...copycourseCurriculumFormData[currentIndex],
-        videoUrl: '',
-        publicID: ''
-      }
+        videoUrl: "",
+        publicID: "",
+      };
 
-      setCourseCurriculumFormData(copycourseCurriculumFormData)
+      setCourseCurriculumFormData(copycourseCurriculumFormData);
     }
-    
   }
 
   console.log("courseCurriculumFormData", courseCurriculumFormData);
@@ -113,7 +118,12 @@ function CourseCurriculum() {
         <CardTitle>Create Course Curriculum</CardTitle>
       </CardHeader>
       <CardContent>
-        <Button disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgress} onClick={handleNewLecture}>Add Lecture</Button>
+        <Button
+          disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgress}
+          onClick={handleNewLecture}
+        >
+          Add Lecture
+        </Button>
         {mediaUploadProgress ? (
           <MediaProgressBar
             isMediaUploading={mediaUploadProgress}
@@ -153,7 +163,9 @@ function CourseCurriculum() {
                       width="450px"
                       height="200px"
                     />
-                    <Button onClick={() => handleReplaceVideo(index)}>Replace Video</Button>
+                    <Button onClick={() => handleReplaceVideo(index)}>
+                      Replace Video
+                    </Button>
                     <Button className="bg-red-900">Delete Lecture</Button>
                   </div>
                 ) : (

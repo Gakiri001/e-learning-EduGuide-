@@ -78,36 +78,34 @@ function VideoPlayer({ width = "100%", height = "100%", url }) {
     return `${mm}: ${ss}`;
   }
 
- const handleFullScreen = useCallback(() => {
-  if(!isFullScreen){
-    if(playerContainerRef?.current?.requestFullscreen){
-      playerContainerRef?.current?.requestFullscreen()
+  const handleFullScreen = useCallback(() => {
+    if (!isFullScreen) {
+      if (playerContainerRef?.current?.requestFullscreen) {
+        playerContainerRef?.current?.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
     }
-  }
-  else{
-    if(document.exitFullscreen){
-      document.exitFullscreen()
-    }
-  }
- },[isFullScreen])
+  }, [isFullScreen]);
 
- function handleMouseMove() {
-  setShowControls(true)
-  clearTimeout(controlsTimeoutRef.current)
-  controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 3000)
- }
-
- useEffect(() => {
-  const handleFullScreenChange = () =>{
-    setIsFullScreen(document.fullscreenElement)
-  }
-  document.addEventListener('fullscreenchange', handleFullScreenChange)
-
-  return()=>{
-    document.removeEventListener('fullscreenchange', handleFullScreenChange)
+  function handleMouseMove() {
+    setShowControls(true);
+    clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
   }
 
- },[])
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    };
+  }, []);
 
   return (
     <div
@@ -115,7 +113,7 @@ function VideoPlayer({ width = "100%", height = "100%", url }) {
       className={`relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl transition-all duration-300 ease-in-out ${isFullScreen ? "w-screen h-screen" : ""}`}
       style={{ width, height }}
       onMouseMove={handleMouseMove}
-      onMouseLeave={()=>setShowControls(false)}
+      onMouseLeave={() => setShowControls(false)}
     >
       <ReactPlayer
         ref={playerRef}
@@ -192,8 +190,8 @@ function VideoPlayer({ width = "100%", height = "100%", url }) {
             </div>
             <div className="flex items-center space-x-2">
               <div className="text-white">
-                {formatTime(played * (playerRef?.current?.getDuration() || 0))}
-                /{formatTime(playerRef?.current?.getDuration() || 0)}
+                {formatTime(played * (playerRef?.current?.getDuration() || 0))}/
+                {formatTime(playerRef?.current?.getDuration() || 0)}
               </div>
               <Button
                 variant="ghost"
@@ -201,9 +199,11 @@ function VideoPlayer({ width = "100%", height = "100%", url }) {
                 onClick={handleFullScreen}
                 className="text-white bg-transparent hover:text-white hover:bg-gray-700"
               >
-                {
-                  isFullScreen ? <Minimize className="w-6 h-6"/> : <Maximize className="w-6 h-6"/>
-                }
+                {isFullScreen ? (
+                  <Minimize className="w-6 h-6" />
+                ) : (
+                  <Maximize className="w-6 h-6" />
+                )}
               </Button>
             </div>
           </div>

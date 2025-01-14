@@ -4,7 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth-routes/index");
 const mediaRoutes = require("./routes/instructor-routes/media-routes");
-
+const instructorCoursesRoutes = require("./routes/instructor-routes/course-routes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -29,6 +29,7 @@ mongoose
 //routes configuration
 app.use("/auth", authRoutes);
 app.use("/media", mediaRoutes);
+app.use("/instructor/course", instructorCoursesRoutes)
 
 //Global Error handler
 app.use((err, req, res, next) => {
