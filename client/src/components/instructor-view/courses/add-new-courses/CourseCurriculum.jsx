@@ -110,8 +110,6 @@ function CourseCurriculum() {
     }
   }
 
-  console.log("courseCurriculumFormData", courseCurriculumFormData);
-
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">

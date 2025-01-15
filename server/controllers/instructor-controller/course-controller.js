@@ -16,90 +16,83 @@ const addNewCourse = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Some error occured in adding the new course",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Some error occured in adding the new course",
+    });
   }
 };
 
 const getAllCourses = async (req, res) => {
   try {
-    const courseList = await Course.find()
+    const courseList = await Course.find();
 
     res.status(200).json({
       success: true,
-      data : courseList,
-    })
-
+      data: courseList,
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Some error occured in adding the new course",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Some error occured in adding the new course",
+    });
   }
 };
 
 const getCourseDetailsByID = async (req, res) => {
   try {
-    const {id} = req.params
-    const CourseDetails = await Course.findById(id)
+    const { id } = req.params;
+    const CourseDetails = await Course.findById(id);
 
-    if(!CourseDetails){
+    if (!CourseDetails) {
       return res.status(404).json({
         success: false,
-        message : "course not found"
-      })
+        message: "course not found",
+      });
     }
 
     res.status(200).json({
       success: true,
-      data : CourseDetails
-    })
-
+      data: CourseDetails,
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Some error occured in adding the new course",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Some error occured in adding the new course",
+    });
   }
 };
 
 const updateCourseById = async (req, res) => {
   try {
-    const {id} = req.params
+    const { id } = req.params;
     const updatedCourseData = req.body;
-    const updatedCourse = await Course.findByIdAndUpdate(id,updatedCourseData,{new:true})
+    const updatedCourse = await Course.findByIdAndUpdate(
+      id,
+      updatedCourseData,
+      { new: true },
+    );
 
-    if(!updatedCourse){
+    if (!updatedCourse) {
       return res.status(404).json({
         success: false,
-        message : "course not found"
-      })      
+        message: "course not found",
+      });
     }
 
     res.status(200).json({
       success: true,
-      message : 'course updated successfully',
-      data : updatedCourse
-    })
-
+      message: "course updated successfully",
+      data: updatedCourse,
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Some error occured in adding the new course",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Some error occured in adding the new course",
+    });
   }
 };
 
