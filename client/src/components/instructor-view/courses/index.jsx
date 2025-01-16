@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React from "react";
+import React, { useContext } from "react";
 import {
   Table,
   TableBody,
@@ -12,15 +12,20 @@ import {
 } from "@/components/ui/table";
 import { Delete, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { InstructorContext } from "@/Context/intructor-context";
 
 function InstructorCourses({ listOfCourses }) {
   const navigate = useNavigate();
+  const{setCurrentEditedCourseID} = useContext(InstructorContext)
 
   return (
     <Card>
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold">All Courses</CardTitle>
-        <Button onClick={() => navigate("/instructor/create-new-course")}>
+        <Button onClick={() => {
+          setCurrentEditedCourseID(null)
+          navigate("/instructor/create-new-course")
+        }}>
           Create New Courses
         </Button>
       </CardHeader>
@@ -46,8 +51,14 @@ function InstructorCourses({ listOfCourses }) {
                       <TableCell>{course?.students?.length}</TableCell>
                       <TableCell>${course?.pricing}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
-                          <Edit className="h-6 w-6 " />
+                        <Button onClick={() => {
+                              navigate(`/instructor/edit-course/${course?._id}`);
+                            }}
+                            variant="ghost" 
+                            size="sm">
+                          <Edit
+                            className="h-6 w-6 "
+                          />
                         </Button>
                         <Button variant="ghost" size="sm">
                           <Delete className="h-6 w-6 " />

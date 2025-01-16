@@ -10,9 +10,9 @@ import {
 } from "@/config";
 import { AuthContext } from "@/Context/Auth-context";
 import { InstructorContext } from "@/Context/intructor-context";
-import { addNewCourseService } from "@/services";
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { addNewCourseService, fetchInstructorCourseDetailsByIDService } from "@/services";
+import React, { useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function AddNewCoursePage() {
   const {
@@ -20,9 +20,15 @@ function AddNewCoursePage() {
     courseCurriculumFormData,
     setCourseLandingFormData,
     setCourseCurriculumFormData,
+    currentEditedCourseID,
+    setCurrentEditedCourseID,
   } = useContext(InstructorContext);
+
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
+  const params = useParams();
+
+  console.log(params);
 
   function isEmpty(value) {
     if (Array.isArray(value)) {
@@ -75,6 +81,36 @@ function AddNewCoursePage() {
 
     console.log("courseFinalFormData", courseFinalFormData);
   }
+
+  async function fetchCurrentCourseDetails() {
+    const response = await fetchInstructorCourseDetailsByIDService(currentEditedCourseID)
+
+    console.log("response", response);
+
+    if(response?.success){
+      const setCourseFormData = Object.keys(courseLandingInitialFormData).reduce((acc,key)=>{
+        acc[key] = response?.data[key] || courseLandingInitialFormData[key]
+
+        return acc
+      }, {})
+
+      console.log("setCourseFormData", setCourseFormData);
+      console.log("response.data", response?.data);
+      setCourseLandingFormData(setCourseFormData)
+      setCourseCurriculumFormData(response?.data?.curriculum)
+      
+    }
+
+    
+  }  
+
+  useEffect(() => {
+    if(currentEditedCourseID !== null) fetchCurrentCourseDetails()
+  }, [currentEditedCourseID])
+
+  useEffect(()=>{
+    if(params?.courseID) setCurrentEditedCourseID(params?.courseID)
+  }, [params?.courseID])
 
   return (
     <div className="container mx-auto p-4">
