@@ -10,7 +10,7 @@ import {
 } from "@/config";
 import { AuthContext } from "@/Context/Auth-context";
 import { InstructorContext } from "@/Context/intructor-context";
-import { addNewCourseService, fetchInstructorCourseDetailsByIDService } from "@/services";
+import { addNewCourseService, updateCourseByIDService, fetchInstructorCourseDetailsByIDService } from "@/services";
 import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -72,11 +72,14 @@ function AddNewCoursePage() {
       isPublished: true,
     };
 
-    const response = await addNewCourseService(courseFinalFormData);
+    const response = 
+    currentEditedCourseID !== null ? await updateCourseByIDService(currentEditedCourseID, courseFinalFormData) :
+    await addNewCourseService(courseFinalFormData);
     if (response?.success) {
       setCourseLandingFormData(courseLandingInitialFormData);
       setCourseCurriculumFormData(courseCurriculumInitialFormData);
       navigate(-1);
+      setCurrentEditedCourseID(null)
     }
 
     console.log("courseFinalFormData", courseFinalFormData);
@@ -129,11 +132,11 @@ function AddNewCoursePage() {
           <div className="container mx-auto p-4 ">
             <Tabs defaultValue="curriculum" className="space-y-4">
               <TabsList>
-                <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
+                <TabsTrigger value="curriculum">Course Curriculum</TabsTrigger>
                 <TabsTrigger value="Course-landing-page">
                   Course Landing Page
                 </TabsTrigger>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
+                <TabsTrigger value="settings">Course Settings</TabsTrigger>
               </TabsList>
               <TabsContent value="curriculum">
                 <CourseCurriculum />

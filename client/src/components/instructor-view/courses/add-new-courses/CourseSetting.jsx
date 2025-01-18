@@ -2,9 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { InstructorContext } from "@/Context/intructor-context";
-import { mediaUploadService } from "@/services";
+import { mediaDeleteService, mediaUploadService } from "@/services";
 import React, { useContext } from "react";
 import MediaProgressBar from "@/components/mediaProgessBar";
+import { Button } from "@/components/ui/button";
 
 function CourseSetting() {
   const {
@@ -33,6 +34,7 @@ function CourseSetting() {
           setCourseLandingFormData({
             ...courseLandingFormData,
             image: response.data.url,
+            imageID: response.data.public_id,
           });
           setMediaUploadProgress(false);
         }
@@ -41,6 +43,7 @@ function CourseSetting() {
       }
     }
   }
+
   return (
     <Card>
       <CardHeader>
@@ -56,7 +59,9 @@ function CourseSetting() {
       </div>
       <CardContent>
         {courseLandingFormData?.image ? (
-          <img src={courseLandingFormData.image} alt="" />
+          <div>
+            <img src={courseLandingFormData.image} alt="" />
+          </div>
         ) : (
           <div className="flex flex-col gap-3">
             <Label>Upload Course Image</Label>

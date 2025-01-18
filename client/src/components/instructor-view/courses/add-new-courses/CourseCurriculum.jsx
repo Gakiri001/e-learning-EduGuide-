@@ -60,7 +60,7 @@ function CourseCurriculum() {
           videoFormData,
           setMediaUploadProgressPercentage,
         );
-        console.log("response", response);
+        console.log("responseeeee", response);
         if (response.success) {
           let copycourseCurriculumFormData = [...courseCurriculumFormData];
           copycourseCurriculumFormData[currentIndex] = {
