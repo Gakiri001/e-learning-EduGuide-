@@ -88,8 +88,6 @@ function AuthProvider({ children }) {
     checkAuthUser();
   }, []);
 
-  console.log(auth);
-
   return (
     <AuthContext.Provider
       value={{

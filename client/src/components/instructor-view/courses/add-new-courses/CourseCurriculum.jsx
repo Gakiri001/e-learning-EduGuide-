@@ -169,6 +169,18 @@ function CourseCurriculum() {
 
   async function handleDeleteLecture(currentIndex) {
     let copycourseCurriculumFormData = [...courseCurriculumFormData];
+    const getCurrentVideoPublicID =
+      copycourseCurriculumFormData[currentIndex].publicID;
+
+    const response = await mediaDeleteService(getCurrentVideoPublicID);
+
+    if (response?.success) {
+      copycourseCurriculumFormData = copycourseCurriculumFormData.filter(
+        (_, index) => index !== currentIndex,
+      );
+
+      setCourseCurriculumFormData(copycourseCurriculumFormData);
+    }
   }
 
   return (
