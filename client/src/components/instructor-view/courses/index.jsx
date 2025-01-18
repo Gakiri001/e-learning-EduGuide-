@@ -12,24 +12,32 @@ import {
 } from "@/components/ui/table";
 import { Delete, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { InstructorContext} from "@/Context/intructor-context";
-import { courseCurriculumInitialFormData, courseLandingInitialFormData } from "@/config";
+import { InstructorContext } from "@/Context/intructor-context";
+import {
+  courseCurriculumInitialFormData,
+  courseLandingInitialFormData,
+} from "@/config";
 
 function InstructorCourses({ listOfCourses }) {
   const navigate = useNavigate();
-  const{setCurrentEditedCourseID,setCourseLandingFormData,setCourseCurriculumFormData} = useContext(InstructorContext)
+  const {
+    setCurrentEditedCourseID,
+    setCourseLandingFormData,
+    setCourseCurriculumFormData,
+  } = useContext(InstructorContext);
 
   return (
     <Card>
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold">All Courses</CardTitle>
-        <Button onClick={() => {
-          setCourseLandingFormData(courseLandingInitialFormData)
-          setCourseCurriculumFormData(courseCurriculumInitialFormData)
-          setCurrentEditedCourseID(null)
-          navigate("/instructor/create-new-course")
-        }}
-        className="p-6"
+        <Button
+          onClick={() => {
+            setCourseLandingFormData(courseLandingInitialFormData);
+            setCourseCurriculumFormData(courseCurriculumInitialFormData);
+            setCurrentEditedCourseID(null);
+            navigate("/instructor/create-new-course");
+          }}
+          className="p-6"
         >
           Create New Courses
         </Button>
@@ -56,14 +64,14 @@ function InstructorCourses({ listOfCourses }) {
                       <TableCell>{course?.students?.length}</TableCell>
                       <TableCell>${course?.pricing}</TableCell>
                       <TableCell className="text-right">
-                        <Button onClick={() => {
-                              navigate(`/instructor/edit-course/${course?._id}`);
-                            }}
-                            variant="ghost" 
-                            size="sm">
-                          <Edit
-                            className="h-6 w-6 "
-                          />
+                        <Button
+                          onClick={() => {
+                            navigate(`/instructor/edit-course/${course?._id}`);
+                          }}
+                          variant="ghost"
+                          size="sm"
+                        >
+                          <Edit className="h-6 w-6 " />
                         </Button>
                         <Button variant="ghost" size="sm">
                           <Delete className="h-6 w-6 " />
