@@ -91,7 +91,18 @@ const updateCourseById = async (req, res) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: "Some error occured in adding the new course",
+      message: "Some error occured when updating course",
+    });
+  }
+};
+
+const deleteCourseByID = async (req, res) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error occured when deleting the course",
     });
   }
 };
