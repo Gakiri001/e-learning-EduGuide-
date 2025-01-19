@@ -98,6 +98,17 @@ const updateCourseById = async (req, res) => {
 
 const deleteCourseByID = async (req, res) => {
   try {
+    const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Asset ID is required" });
+    }
+    const deletedCoure = await Course.findByIdAndDelete(id);
+    res.status(200).json({
+      success: true,
+      message: "Course deleted successufully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -112,4 +123,5 @@ module.exports = {
   getAllCourses,
   updateCourseById,
   getCourseDetailsByID,
+  deleteCourseByID,
 };

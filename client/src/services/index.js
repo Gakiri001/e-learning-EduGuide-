@@ -60,6 +60,15 @@ export async function updateCourseByIDService(id, formData) {
   );
   return data;
 }
+export async function deleteCourseByIDService(id, formData) {
+  const { data } = await axiosInstance.delete(
+    `/instructor/course/delete/${id}`,
+    {
+      data: formData,
+    },
+  );
+  return data;
+}
 
 export async function mediaBulkUploadService(formData, onProgressCallback) {
   const { data } = await axiosInstance.post("/media/bulk-upload", formData, {

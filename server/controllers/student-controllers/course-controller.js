@@ -23,13 +23,11 @@ const getStudentViewCoursesDetails = async (req, res) => {
     const { id } = req.params;
     const courseDetails = await Course.findById(id);
     if (!courseDetails) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "No course details Found",
-          data: null,
-        });
+      return res.status(404).json({
+        success: false,
+        message: "No course details Found",
+        data: null,
+      });
     }
     res.status(200).json({
       success: true,

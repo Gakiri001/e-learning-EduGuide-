@@ -17,14 +17,50 @@ import {
   courseCurriculumInitialFormData,
   courseLandingInitialFormData,
 } from "@/config";
+import { deleteCourseByIDService } from "@/services";
+import { AuthContext } from "@/Context/Auth-context";
 
 function InstructorCourses({ listOfCourses }) {
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+
   const {
     setCurrentEditedCourseID,
     setCourseLandingFormData,
     setCourseCurriculumFormData,
+    currentDeleteCourseID,
+    setCurrentDeleteCourseID,
+    courseLandingFormData,
+    courseCurriculumFormData,
   } = useContext(InstructorContext);
+
+  async function handleDelete() {
+    if (!currentDeleteCourseID) {
+      console.error("No course selected");
+      return;
+    }
+    const courseFinalFormData = {
+      instructorID: auth?.user?._id,
+      instructorName: auth?.user?.userName,
+      date: new Date(),
+      ...courseLandingFormData,
+      students: [],
+      curriculum: courseCurriculumFormData,
+      isPublished: true,
+    };
+
+    const response = await deleteCourseByIDService(
+      currentDeleteCourseID,
+      courseFinalFormData,
+    );
+    console.log("responseDelete", response);
+    if (response.success) {
+      setCourseLandingFormData(null);
+      setCourseCurriculumFormData(null);
+      alert("Course Deleted successfully");
+      navigate(-1);
+    }
+  }
 
   return (
     <Card>
@@ -73,7 +109,14 @@ function InstructorCourses({ listOfCourses }) {
                         >
                           <Edit className="h-6 w-6 " />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setCurrentDeleteCourseID(course?._id);
+                            handleDelete();
+                          }}
+                        >
                           <Delete className="h-6 w-6 " />
                         </Button>
                       </TableCell>
