@@ -68,6 +68,15 @@ function StudentHomePage() {
                   alt=""
                   className="w-full h-40 object-cover"
                 />
+                <div className="p-4">
+                  <h3 className="font-bold mb-2">{courseItem?.title}</h3>
+                  <p className="text-sm text-gray-700 mb-2 capitalize">
+                    intructor: {courseItem?.instructorName}
+                  </p>
+                  <p className="font-bold text-[16px]">
+                    ${courseItem?.pricing}
+                  </p>
+                </div>
               </div>
             ))
           ) : (
