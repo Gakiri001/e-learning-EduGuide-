@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -14,14 +14,58 @@ import { studentContext } from "@/Context/student-context";
 import { fetchStudentViewCourseListService } from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
 import React, { useContext, useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+
+function createSearchParamsHelper(filterParams) {
+  const queryParams = [];
+
+  for (const [key, value] of Object.entries(filterParams)) {
+    if (Array.isArray(value) && value.length > 0) {
+      const paramsValue = value.join(",");
+
+      queryParams.push(`${key}=${encodeURIComponent(paramsValue)}`);
+    }
+  }
+  return queryParams.join(`&`);
+}
 
 function StudentViewCoursesPage() {
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("price-lowtohigh");
+  const [filters, setFilters] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams();
   const { studentViewCoursesList, setStudentViewCoursesList } =
     useContext(studentContext);
 
-  async function fetAllStudentViewCourses() {
-    const response = await fetchStudentViewCourseListService();
+  function handleFilterOnChange(getSectionId, getCurrentOption) {
+    let copyFilters = { ...filters };
+    const indexofCurrentSection =
+      Object.keys(copyFilters).indexOf(getSectionId);
+
+    console.log(indexofCurrentSection, getSectionId);
+    if (indexofCurrentSection === -1) {
+      copyFilters = {
+        ...copyFilters,
+        [getSectionId]: [getCurrentOption.id],
+      };
+      console.log(copyFilters);
+    } else {
+      const indexofCurrentOption = copyFilters[getSectionId].indexOf(
+        getCurrentOption.id,
+      );
+      if (indexofCurrentOption === -1)
+        copyFilters[getSectionId].push(getCurrentOption.id);
+      else copyFilters[getSectionId].splice(indexofCurrentOption, 1);
+    }
+    setFilters(copyFilters);
+    sessionStorage.setItem("filters", JSON.stringify(copyFilters));
+  }
+
+  async function fetchAllStudentViewCourses(filters, sort) {
+    const query = new URLSearchParams({
+      ...filters,
+      sortBy: sort,
+    });
+    const response = await fetchStudentViewCourseListService(query);
     console.log("response", response);
     if (response.success) {
       setStudentViewCoursesList(response?.data);
@@ -29,8 +73,16 @@ function StudentViewCoursesPage() {
   }
 
   useEffect(() => {
-    fetAllStudentViewCourses();
-  }, []);
+    const buildQueryStringForFilters = createSearchParamsHelper(filters);
+    setSearchParams(new URLSearchParams(buildQueryStringForFilters));
+  }, [filters]);
+
+  useEffect(() => {
+    if (filters !== null && sort !== null)
+      fetchAllStudentViewCourses(filters, sort);
+  }, [filters, sort]);
+
+  console.log(filters);
 
   return (
     <div className="container mx-auto p-4">
@@ -45,9 +97,14 @@ function StudentViewCoursesPage() {
                   {filterOptions[keyItem].map((option) => (
                     <Label className="flex font-medium items-center gap-3">
                       <Checkbox
-                        check={false}
+                        check={
+                          filters &&
+                          Object.keys(filters).length > 0 &&
+                          filters[keyItem] &&
+                          filters[keyItem].indexOf(option.id) > -1
+                        }
                         onCheckedChange={() =>
-                          handleFilterOnChange(keyItem, option.id)
+                          handleFilterOnChange(keyItem, option)
                         }
                       />
                       {option.label}
@@ -92,7 +149,7 @@ function StudentViewCoursesPage() {
           <div className="space-y-4">
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseItem) => (
-                <Card key={courseItem?._id}>
+                <Card className="cursor-pointer" key={courseItem?._id}>
                   <CardContent className="flex gap-4 p-4">
                     <div className="w-48 h-32 flex-shrink-0">
                       <img
@@ -100,6 +157,23 @@ function StudentViewCoursesPage() {
                         className="w-full h-full object-cover"
                         alt=""
                       />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-xl mb-2">
+                        {courseItem?.title}
+                      </CardTitle>
+                      <p className="text-sm text-gray-600 mb-1">
+                        Created by :{" "}
+                        <span className="font-bold capitalize">
+                          {courseItem?.instructorName}
+                        </span>
+                      </p>
+                      <p className="text-[16px] text-gray-500 mt-3 mb-2 capitalize">
+                        {`${courseItem?.curriculum?.length} ${courseItem?.curriculum.length <= 1 ? "Lecture" : "Lectures"} - ${courseItem?.level.toUpperCase()} Level`}
+                      </p>
+                      <p className="font-bold text-lg">
+                        ${courseItem?.pricing}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
