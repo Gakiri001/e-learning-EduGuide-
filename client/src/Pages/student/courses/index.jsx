@@ -15,7 +15,7 @@ import { studentContext } from "@/Context/student-context";
 import { fetchStudentViewCourseListService } from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
 import React, { useContext, useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
@@ -40,6 +40,7 @@ function StudentViewCoursesPage() {
     loadingState,
     setLoadingState,
   } = useContext(studentContext);
+  const navigate = useNavigate();
 
   function handleFilterOnChange(getSectionId, getCurrentOption) {
     let copyFilters = { ...filters };
@@ -166,7 +167,11 @@ function StudentViewCoursesPage() {
           <div className="space-y-4">
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseItem) => (
-                <Card className="cursor-pointer" key={courseItem?._id}>
+                <Card
+                  onClick={() => navigate(`/course/details/${courseItem?._id}`)}
+                  className="cursor-pointer"
+                  key={courseItem?._id}
+                >
                   <CardContent className="flex gap-4 p-4">
                     <div className="w-48 h-32 flex-shrink-0">
                       <img
@@ -189,7 +194,7 @@ function StudentViewCoursesPage() {
                         {`${courseItem?.curriculum?.length} ${courseItem?.curriculum.length <= 1 ? "Lecture" : "Lectures"} - ${courseItem?.level.toUpperCase()} Level`}
                       </p>
                       <p className="font-bold text-lg">
-                        ${courseItem?.pricing}
+                        Ksh {courseItem?.pricing}
                       </p>
                     </div>
                   </CardContent>
