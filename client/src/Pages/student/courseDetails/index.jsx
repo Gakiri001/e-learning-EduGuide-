@@ -1,6 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
 import { studentContext } from "@/Context/student-context";
@@ -21,7 +29,7 @@ function StudentViewCourseDetailsPage() {
 
   const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] =
     useState(null);
-    const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
+  const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
 
   const { id } = useParams();
   const location = useLocation();
@@ -40,14 +48,14 @@ function StudentViewCourseDetailsPage() {
     }
   }
 
-  function handleSetFreePreview(getcurentVideoInfo){
+  function handleSetFreePreview(getcurentVideoInfo) {
     console.log(getcurentVideoInfo);
-    setDisplayCurrentVideoFreePreview(getcurentVideoInfo?.videoUrl)
+    setDisplayCurrentVideoFreePreview(getcurentVideoInfo?.videoUrl);
   }
 
-  useEffect(()=>{
-    if(displayCurrentVideoFreePreview !== null) setShowFreePreviewDialog(true)
-  },[displayCurrentVideoFreePreview])
+  useEffect(() => {
+    if (displayCurrentVideoFreePreview !== null) setShowFreePreviewDialog(true);
+  }, [displayCurrentVideoFreePreview]);
 
   useEffect(() => {
     if (currentCourseDetailsID !== null) fetchStudentViewCourseDetails();
@@ -140,7 +148,11 @@ function StudentViewCourseDetailsPage() {
                 (curriculumItem, index) => (
                   <li
                     className={`${curriculumItem?.freePreview ? "cursor-pointer" : "cursor-not-allowed"} flex items-center mb-4`}
-                    onClick={curriculumItem?.freePreview ? () => handleSetFreePreview(curriculumItem) : null}
+                    onClick={
+                      curriculumItem?.freePreview
+                        ? () => handleSetFreePreview(curriculumItem)
+                        : null
+                    }
                   >
                     {curriculumItem?.freePreview ? (
                       <PlayCircle className="mr-2 h-4 w-4" />
@@ -180,31 +192,46 @@ function StudentViewCourseDetailsPage() {
           </Card>
         </aside>
       </div>
-      <Dialog open={showFreePreviewDialog} onOpenChange={() => {
-        setShowFreePreviewDialog(false)
-        setDisplayCurrentVideoFreePreview(null)
-      }}>
+      <Dialog
+        open={showFreePreviewDialog}
+        onOpenChange={() => {
+          setShowFreePreviewDialog(false);
+          setDisplayCurrentVideoFreePreview(null);
+        }}
+      >
         <DialogContent className="w-[600px]">
           <DialogHeader>
             <DialogTitle>Course Preview</DialogTitle>
           </DialogHeader>
-          <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
-                <VideoPlayer
-                  url={
-                    displayCurrentVideoFreePreview
-                  }
-                  width="450px"
-                  height="200px"
-                />
-              </div>
+          <div className="aspect-video rounded-lg flex items-center justify-center">
+            <VideoPlayer
+              url={displayCurrentVideoFreePreview}
+              width="450px"
+              height="200px"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            {studentViewCoursesDetails?.curriculum
+              ?.filter((item) => item.freePreview)
+              .map((filteredItems) => (
+                <p
+                  onClick={() => handleSetFreePreview(filteredItems)}
+                  className="cursor-pointer text-[16px] font-medium"
+                >
+                  {filteredItems?.title}
+                </p>
+              ))}
+          </div>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
-              <Button type="button" variant="secondary">Close</Button>
+              <Button type="button" variant="secondary">
+                Close
+              </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div> 
+    </div>
   );
 }
 

@@ -11,12 +11,13 @@ i. Sign in to your MongoDB Account
 ii. Create a new project. Name it.
 iii. Create a cluster. Use the free billing. And create Deployment
 iv. Connect to cluster. username and password will be provided.
-v. connect -> MongoDB for Vscode. Connect to your MongoDB deployment and paste the MONGO_DB URI(in the env file)
+v. go to network access -> add ip address button and allow access from anywhere
+vi. click connect -> MongoDB for Vscode. Connect to your MongoDB deployment and paste the MONGO_DB URI(in the env file)
 mongodb+srv://gakirijulius:<db_password>@cluster0.e24md.mongodb.net/
 Remember to change the password
 
 
-CLIENT
+CLIENT -> check the new Tailwind installation below
 i. npm install -D tailwindcss postcss autoprefixer
 ii. npx tailwindcss init -p
 iii. Replace the content in tailwind.config.js
@@ -61,8 +62,8 @@ from 'https://ui.shadcn.com/docs/installation/vite' website No. 6
 
 vii. You can now start adding components to your project.
 
-npx shadcn@latest add button
-creates a component folder with button.jsx in the src
+    npx shadcn@latest add button
+    creates a component folder with button.jsx in the src
 
 from 'https://ui.shadcn.com/docs/installation/vite' website No. 8
 
@@ -86,4 +87,23 @@ ERRORS ENCOUNTED
 //variables re-naming
 //mapping
 //conitional rendering
+
+
+Tailwind new installation for vite according to thier website
+1. Install tailwindcss and @tailwindcss/vite via npm.
+    run -> 'npm install tailwindcss @tailwindcss/vite'
+2. Configure the Vite plugin
+    Add the @tailwindcss/vite plugin to your Vite configuration.
+        import { defineConfig } from 'vite'
+        import tailwindcss from '@tailwindcss/vite'
+        export default defineConfig({
+          plugins: [
+            tailwindcss(),
+          ],
+        })
+        from 'https://tailwindcss.com/docs/installation/using-vite#react'
+3. Import Tailwind CSS
+    Add an @import to your CSS file that imports Tailwind CSS.
+    '@import "tailwindcss";'
+    in the 'index.css' & 'app.css'
 
