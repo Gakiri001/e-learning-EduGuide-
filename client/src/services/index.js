@@ -100,7 +100,22 @@ export async function createPaymentService(formData) {
   return data;
 }
 //2
-export async function captureAndfinalizePaymentService(formData) {
-  const { data } = await axiosInstance.post(`/student/order/capture`, formData);
+export async function captureAndfinalizePaymentService(
+  paymentID,
+  payerID,
+  orderID,
+) {
+  const { data } = await axiosInstance.post(`/student/order/capture`, {
+    paymentID,
+    payerID,
+    orderID,
+  });
+  return data;
+}
+
+export async function fetchStudentBoughtCourseService(studentId) {
+  const { data } = await axiosInstance.get(
+    `/student/courses-bought/get/${studentId}`,
+  );
   return data;
 }
