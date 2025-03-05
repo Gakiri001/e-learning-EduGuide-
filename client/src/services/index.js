@@ -93,3 +93,14 @@ export async function fetchStudentViewCourseDetailsService(courseid) {
   );
   return data;
 }
+
+//1
+export async function createPaymentService(formData) {
+  const { data } = await axiosInstance.post(`/student/order/create`, formData);
+  return data;
+}
+//2
+export async function captureAndfinalizePaymentService(formData) {
+  const { data } = await axiosInstance.post(`/student/order/capture`, formData);
+  return data;
+}

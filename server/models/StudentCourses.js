@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const studentCoursesSchema = new mongoose.Schema({
-  userID : String,
-  courses : [
+  userID: String,
+  courses: [
     {
-      courseID : String,
-      title : String,
-      instructorID : String,
-      instructorName : String,
-      dateOfPurchase : Date,
-      courseImage : String
-    }
-  ]
-})
+      courseID: String,
+      title: String,
+      instructorID: String,
+      instructorName: String,
+      dateOfPurchase: Date,
+      courseImage: String,
+    },
+  ],
+});
 
-module.exports = mongoose.model('StudentCourses', studentCoursesSchema)
+module.exports = mongoose.model("StudentCourses", studentCoursesSchema);

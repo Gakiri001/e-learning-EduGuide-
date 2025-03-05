@@ -11,8 +11,12 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
+import { AuthContext } from "@/Context/Auth-context";
 import { studentContext } from "@/Context/student-context";
-import { fetchStudentViewCourseDetailsService } from "@/services";
+import {
+  createPaymentService,
+  fetchStudentViewCourseDetailsService,
+} from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -27,9 +31,12 @@ function StudentViewCourseDetailsPage() {
     setLoadingState,
   } = useContext(studentContext);
 
+  const { auth } = useContext(AuthContext);
+
   const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] =
     useState(null);
   const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
+  const [approvalurl, setApprovalURL] = useState("");
 
   const { id } = useParams();
   const location = useLocation();
@@ -45,6 +52,36 @@ function StudentViewCourseDetailsPage() {
     } else {
       setStudentViewCoursesDetails(null);
       setLoadingState(false);
+    }
+  }
+
+  async function handleCreatePayment() {
+    const paymentPayload = {
+      userID: auth?.user?._id,
+      userName: auth?.user?.userName,
+      userEmail: auth?.user?.userEmail,
+      orderStatus: "pending",
+      paymentMethod: "paypal",
+      paymentStatus: "initiated",
+      orderDate: new Date(),
+      paymentID: "",
+      payerID: "",
+      instructorID: studentViewCoursesDetails?.instructorID,
+      instructorName: studentViewCoursesDetails?.instructorName,
+      CourseImage: studentViewCoursesDetails?.image,
+      CourseTitle: studentViewCoursesDetails?.title,
+      courseID: studentViewCoursesDetails?._id,
+      coursePricing: studentViewCoursesDetails?.pricing,
+    };
+    console.log("paymentPayload", paymentPayload);
+    const response = await createPaymentService(paymentPayload);
+
+    if (response.success) {
+      sessionStorage.setItem(
+        "currentOrderID",
+        JSON.stringify(response?.data?.orderID),
+      );
+      setApprovalURL(response?.data?.approvalURL);
     }
   }
 
@@ -73,18 +110,16 @@ function StudentViewCourseDetailsPage() {
 
   if (loadingState) return <Skeleton />;
 
+  if (approvalurl !== "") {
+    window.location.href = approvalurl;
+  }
+
   const getIndexOfFreePreviewURL =
     studentViewCoursesDetails !== null
       ? studentViewCoursesDetails?.curriculum.findIndex(
           (item) => item.freePreview,
         )
       : -1;
-
-  console.log(getIndexOfFreePreviewURL, "getIndexOfFreePreviewURL");
-  console.log(
-    studentViewCoursesDetails?.curriculum[getIndexOfFreePreviewURL],
-    "detais",
-  );
 
   return (
     <div className="mx-auto p-4 ">
@@ -187,7 +222,9 @@ function StudentViewCourseDetailsPage() {
                   Ksh.{studentViewCoursesDetails?.pricing}
                 </span>
               </div>
-              <Button className="w-full">Buy Now</Button>
+              <Button onClick={handleCreatePayment} className="w-full">
+                Buy Now
+              </Button>
             </CardContent>
           </Card>
         </aside>

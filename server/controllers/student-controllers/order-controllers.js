@@ -1,9 +1,9 @@
-const paypal = require('../../helpers/paypal')
-const Order = require('../../models/Order')
-const StudentCourses = require('../../models/StudentCourses')
-const Course = require('../../models/Course')
+const paypal = require("../../helpers/paypal");
+const Order = require("../../models/Order");
+const StudentCourses = require("../../models/StudentCourses");
+const Course = require("../../models/Course");
 
-const createOrder = async(req, res) => {
+const createOrder = async (req, res) => {
   try {
     const {
       userID,
@@ -20,49 +20,48 @@ const createOrder = async(req, res) => {
       CourseImage,
       CourseTitle,
       courseID,
-      coursePricing
-    } = req.body
+      coursePricing,
+    } = req.body;
 
     const create_payment_json = {
-      intent: 'sale',
+      intent: "sale",
       payer: {
-        payment_method : 'paypal'
+        payment_method: "paypal",
       },
-      redirect_urls : {
-        return_url : `${process.env.CLIENT_URL}/payment-return`,
-        cancel_url : `${process.env.CLIENT_URL}/payment-cancel`,
+      redirect_urls: {
+        return_url: `${process.env.CLIENT_URL}/payment-return`,
+        cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
       },
-      transactions : [
+      transactions: [
         {
-          item_list : {
-            items : [
+          item_list: {
+            items: [
               {
-                name : CourseTitle,
-                sku : courseID,
-                price : coursePricing,
-                currency : 'KSH',
-                quantity : 1
-              }
-            ]
+                name: CourseTitle,
+                sku: courseID,
+                price: coursePricing,
+                currency: "USD",
+                quantity: 1,
+              },
+            ],
           },
-          amount : {
-            currency : 'KSH',
-            total : coursePricing.toFixed(2)
+          amount: {
+            currency: "USD",
+            total: coursePricing.toFixed(2),
           },
-          description : CourseTitle
-        }
-      ]
-    }
+          description: CourseTitle,
+        },
+      ],
+    };
 
-    paypal.payment.create(create_payment_json, async(error, paymentinfo) => {
-      if(error){
+    paypal.payment.create(create_payment_json, async (error, paymentinfo) => {
+      if (error) {
         console.log(error);
         return res.status(500).json({
-          success: false, 
-          message: 'Error creating paypal payment!'
-        })
-      }
-      else{
+          success: false,
+          message: "Error creating paypal payment!",
+        });
+      } else {
         const newlyCreatedCourseOrder = new Order({
           userID,
           userName,
@@ -79,99 +78,98 @@ const createOrder = async(req, res) => {
           CourseTitle,
           courseID,
           coursePricing,
-        })
+        });
         await newlyCreatedCourseOrder.save();
 
-        const approvalURL = paymentinfo.links.find(link => link.rel === 'approval_url').href
+        const approvalURL = paymentinfo.links?.find(
+          (link) => link.rel === "approval_url",
+        )?.href;
 
         res.status(201).json({
-          success: true, 
-          data : {
+          success: true,
+          data: {
             approvalURL,
-            orderID: newlyCreatedCourseOrder._id
-          }
-        })
+            orderID: newlyCreatedCourseOrder._id,
+          },
+        });
       }
-    })
-
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({success: false, message:"Error Occured"})
+    res.status(500).json({ success: false, message: "Error Occured" });
   }
-}
+};
 
-const capturePaymentAndFinanlizeOrder  = async(res, req) => {
+const capturePaymentAndFinanlizeOrder = async (req, res) => {
   try {
-    const {paymentID, payerID, orderID} = req.body
-    let order = await order.findById(orderID)
+    const { paymentID, payerID, orderID } = req.body;
+    let order = await Order.findById(orderID);
 
-    if(!order){
+    if (!order) {
       return res.status(404).json({
         success: false,
-        message: `order can't be found`
-      })
+        message: `order can't be found`,
+      });
     }
-    order.paymentStatus = 'paid'
-    order.orderStatus = 'confirmed'
-    order.paymentID = paymentID
-    order.payerID = payerID
+    order.paymentStatus = "paid";
+    order.orderStatus = "confirmed";
+    order.paymentID = paymentID;
+    order.payerID = payerID;
 
     await order.save();
 
     //Update student Course model
     const studentCourses = await StudentCourses.findOne({
-      userID : order.userID
-    })
-    if(studentCourses){
+      userID: order.userID,
+    });
+    if (studentCourses) {
       studentCourses.courses.push({
-        courseID : order.courseID,
-        title : order.CourseTitle,
-        instructorID : order.instructorID,
-        instructorName : order.instructorName,
-        dateOfPurchase : order.orderDate,
-        courseImage : order.courseImage
-      })
-      await studentCourses.save()
-    }
-    else{
+        courseID: order.courseID,
+        title: order.CourseTitle,
+        instructorID: order.instructorID,
+        instructorName: order.instructorName,
+        dateOfPurchase: order.orderDate,
+        courseImage: order.courseImage,
+      });
+      await studentCourses.save();
+    } else {
       const newstudentCourse = new StudentCourses({
-        userID : order.userID,
-        courses : [
+        userID: order.userID,
+        courses: [
           {
-            courseID : order.courseID,
-            title : order.CourseTitle,
-            instructorID : order.instructorID,
-            instructorName : order.instructorName,
-            dateOfPurchase : order.orderDate,
-            courseImage : order.courseImage
-          }
-        ]
-      })
-      await newstudentCourse.save()
+            courseID: order.courseID,
+            title: order.CourseTitle,
+            instructorID: order.instructorID,
+            instructorName: order.instructorName,
+            dateOfPurchase: order.orderDate,
+            courseImage: order.courseImage,
+          },
+        ],
+      });
+      await newstudentCourse.save();
     }
-    
+
     //update the course schema student
     await Course.findByIdAndUpdate(order.courseID, {
-      $addToSet : {
-        student : {
+      $addToSet: {
+        student: {
           studentID: order.userID,
           studentName: order.userName,
           studentEmail: order.userEmail,
-          paidAmount: order.coursePricing
-        }
-      }
-    })
+          paidAmount: order.coursePricing,
+        },
+      },
+    });
 
     res.status(200).json({
       success: true,
-      message : 'order Confirmed',
-      data : order,
-    })
-
+      message: "order Confirmed",
+      data: order,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({success: false, message:"Error Occured"})
+    res.status(500).json({ success: false, message: "Error Occured" });
   }
-}
+};
 
-module.exports = {createOrder, capturePaymentAndFinanlizeOrder}
+module.exports = { createOrder, capturePaymentAndFinanlizeOrder };

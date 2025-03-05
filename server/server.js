@@ -33,7 +33,7 @@ app.use("/auth", authRoutes);
 app.use("/media", mediaRoutes);
 app.use("/instructor/course", instructorCoursesRoutes);
 app.use("/student/course", studentViewCoursesRoutes);
-app.use("/student/order", studentViewOrderRoutes)
+app.use("/student/order", studentViewOrderRoutes);
 
 //Global Error handler
 app.use((err, req, res, next) => {
