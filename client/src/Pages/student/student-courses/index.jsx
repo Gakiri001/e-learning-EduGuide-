@@ -1,14 +1,25 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { AuthContext } from "@/Context/Auth-context";
 import { studentContext } from "@/Context/student-context";
-import { fetchStudentBoughtCourseService } from "@/services";
+import {
+  deleteBoughtCourseByIDService,
+  fetchStudentBoughtCourseService,
+} from "@/services";
 import { useContext, useEffect } from "react";
-import banner from "../../../assets/c4.avif";
+import banner from "../../../assets/congratulations.webp";
+import { Button } from "@/components/ui/button";
+import { Delete, Watch } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const StudentCoursesPage = () => {
+  const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
-  const { studentBoughtCoursesList, setStudentBoughtCoursesList } =
-    useContext(studentContext);
+  const {
+    studentBoughtCoursesList,
+    setStudentBoughtCoursesList,
+    currentDeleteBoughtCourseID,
+    setCurrentDeleteBoughtCourseID,
+  } = useContext(studentContext);
 
   console.log("studentId", auth?.user?._id);
 
@@ -24,6 +35,17 @@ const StudentCoursesPage = () => {
     fetchStudentBoughtCourse();
   }, []);
 
+  async function handleDelete() {
+    if (!currentDeleteBoughtCourseID) {
+      console.error("No course selected");
+      return;
+    }
+    const response = await deleteBoughtCourseByIDService(
+      currentDeleteBoughtCourseID,
+    );
+    console.log("responseDelete", response);
+  }
+
   return (
     <div className="p-4">
       <h1 className="text-3xl font-bold">My Courses</h1>
@@ -37,8 +59,33 @@ const StudentCoursesPage = () => {
                   alt={course?.title}
                   className="h-52 w-full object-cover rounded-md mb-4"
                 />
-                {console.log("image url", course?.courseImage)}
+                <h3 className="font-bold mb-1">{course?.title}</h3>
+                <p className="text-sm text-gray-700 mb-2 capitalize">
+                  Instructor : {course?.instructorName}
+                </p>
+                <p className="text-sm text-gray-700">
+                  Purchased on:{" "}
+                  {new Date(course?.dateOfPurchase).toDateString()}
+                </p>
               </CardContent>
+              <CardFooter className="flex flex-col gap-2">
+                <Button
+                  onClick={() =>
+                    navigate(`/course-progress/${course?.courseID}`)
+                  }
+                  className="flex-1 "
+                >
+                  <Watch className="mr-2 h-4 w-4" />
+                  Start Watching
+                </Button>
+                {/* <Button
+                  className="flex-1 bg-red-500"
+                  onClick={() => handleDelete(course._id)}
+                >
+                  <Delete className="mr-2 h-4 w-4" />
+                  Delete Course
+                </Button> */}
+              </CardFooter>
             </Card>
           ))
         ) : (

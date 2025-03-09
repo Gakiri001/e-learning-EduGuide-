@@ -87,9 +87,12 @@ export async function fetchStudentViewCourseListService(query) {
   return data;
 }
 
-export async function fetchStudentViewCourseDetailsService(courseid) {
+export async function fetchStudentViewCourseDetailsService(
+  courseid,
+  studentID,
+) {
   const { data } = await axiosInstance.get(
-    `/student/course/get/details/${courseid}`,
+    `/student/course/get/details/${courseid}/${studentID}`,
   );
   return data;
 }
@@ -116,6 +119,13 @@ export async function captureAndfinalizePaymentService(
 export async function fetchStudentBoughtCourseService(studentId) {
   const { data } = await axiosInstance.get(
     `/student/courses-bought/get/${studentId}`,
+  );
+  return data;
+}
+
+export async function deleteBoughtCourseByIDService(id) {
+  const { data } = await axiosInstance.delete(
+    `/student/courses-bought/delete/${id}`,
   );
   return data;
 }

@@ -9,7 +9,6 @@ const studentCoursesSchema = new mongoose.Schema({
       instructorName: String,
       dateOfPurchase: Date,
       courseImage: String,
-      price: Number, //added for testing
     },
   ],
 });

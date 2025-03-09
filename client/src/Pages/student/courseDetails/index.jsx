@@ -19,7 +19,7 @@ import {
 } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 
 function StudentViewCourseDetailsPage() {
   const {
@@ -37,6 +37,7 @@ function StudentViewCourseDetailsPage() {
     useState(null);
   const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
   const [approvalurl, setApprovalURL] = useState("");
+  const [coursePurchasedID, setCoursePurchasedID] = useState(null);
 
   const { id } = useParams();
   const location = useLocation();
@@ -44,13 +45,16 @@ function StudentViewCourseDetailsPage() {
   async function fetchStudentViewCourseDetails() {
     const response = await fetchStudentViewCourseDetailsService(
       currentCourseDetailsID,
+      auth?.user?._id,
     );
 
     if (response?.success) {
       setStudentViewCoursesDetails(response?.data);
+      setCoursePurchasedID(response?.coursePurchasedID);
       setLoadingState(false);
     } else {
       setStudentViewCoursesDetails(null);
+      setCoursePurchasedID(false);
       setLoadingState(false);
     }
   }
@@ -104,11 +108,17 @@ function StudentViewCourseDetailsPage() {
 
   useEffect(() => {
     if (!location.pathname.includes("/course/details/")) {
-      setStudentViewCoursesDetails(null), setCurrentCourseDetailsID(null);
+      setStudentViewCoursesDetails(null),
+        setCurrentCourseDetailsID(null),
+        setCoursePurchasedID(null);
     }
   }, [location.pathname]);
 
   if (loadingState) return <Skeleton />;
+
+  if (coursePurchasedID !== null) {
+    return <Navigate to={`/course-progress/${coursePurchasedID}`} />;
+  }
 
   if (approvalurl !== "") {
     window.location.href = approvalurl;
