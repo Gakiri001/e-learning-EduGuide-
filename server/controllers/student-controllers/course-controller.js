@@ -66,8 +66,13 @@ const getStudentViewCoursesDetails = async (req, res) => {
     //check if the student has already bought the course or not
     const studentCourses = await StudentCourses.findOne({ userID: studentID });
 
+    console.log("studentCourses", studentCourses);
+
     const ifStudentAlreadyBoughtCurrentCourse =
       studentCourses.courses.findIndex((item) => item.courseID === id) > -1;
+
+    console.log("ifStudentAlreadyBoughtCurrentCourse", ifStudentAlreadyBoughtCurrentCourse);
+    
 
     res.status(200).json({
       success: true,

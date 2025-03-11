@@ -17,6 +17,8 @@ const getCoursesByStudentID = async (req, res) => {
   }
 };
 
+
+//Remember when you are deleting a course from student. Restart you 'studentCourses'in the course-controller.js, Its flikerring and deleting the courseDetails of other courses.
 const deleteBoughtCoursesByID = async (req, res) => {
   try {
     const { id } = req.params;
