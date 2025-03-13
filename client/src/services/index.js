@@ -87,12 +87,16 @@ export async function fetchStudentViewCourseListService(query) {
   return data;
 }
 
-export async function fetchStudentViewCourseDetailsService(
-  courseid,
-  studentID
-) {
+export async function fetchStudentViewCourseDetailsService(courseid) {
   const { data } = await axiosInstance.get(
-    `/student/course/get/details/${courseid}/${studentID}`,
+    `/student/course/get/details/${courseid}`,
+  );
+  return data;
+}
+
+export async function checkCoursePurchaseInfoService(courseid, studentID) {
+  const { data } = await axiosInstance.get(
+    `/student/course/purchase-info/${courseid}/${studentID}`,
   );
   return data;
 }
