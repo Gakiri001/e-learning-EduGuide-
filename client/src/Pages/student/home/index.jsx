@@ -3,17 +3,53 @@ import banner from "../../../assets/c4.avif";
 import { courseCategories } from "@/config";
 import { Button } from "@/components/ui/button";
 import { studentContext } from "@/Context/student-context";
-import { fetchStudentViewCourseListService } from "@/services";
+import {
+  checkCoursePurchaseInfoService,
+  fetchStudentViewCourseListService,
+} from "@/services";
+import { AuthContext } from "@/Context/Auth-context";
+import { useNavigate } from "react-router-dom";
 
 function StudentHomePage() {
   const { studentViewCoursesList, setStudentViewCoursesList } =
     useContext(studentContext);
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  function handleNavigateToCourses(getCurrentID) {
+    console.log(getCurrentID);
+    sessionStorage.removeItem("filters");
+    const currentFilter = {
+      category: [getCurrentID],
+    };
+
+    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+    navigate("/courses");
+  }
 
   async function fetAllStudentViewCourses() {
     const response = await fetchStudentViewCourseListService();
     console.log("response", response);
     if (response.success) {
       setStudentViewCoursesList(response?.data);
+    }
+  }
+
+  async function handleCourseNavigate(getCurrentCourseID) {
+    console.log("getCurrentCourseID", getCurrentCourseID);
+    console.log("auth?.user?._id", auth?.user?._id);
+
+    const response = await checkCoursePurchaseInfoService(
+      getCurrentCourseID,
+      auth?.user?._id,
+    );
+
+    if (response?.success) {
+      if (response?.data) {
+        navigate(`/course-progress/${getCurrentCourseID}`);
+      } else {
+        navigate(`/course/details/${getCurrentCourseID}`);
+      }
     }
   }
 
@@ -49,6 +85,7 @@ function StudentHomePage() {
               className="justify-start"
               variant="outline"
               key={categoryItem.id}
+              onClick={() => handleNavigateToCourses(categoryItem.id)}
             >
               {categoryItem.label}
             </Button>
@@ -60,7 +97,10 @@ function StudentHomePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
             studentViewCoursesList.map((courseItem) => (
-              <div className="border rounded-lg overflow-hidden shadow cursor-pointer">
+              <div
+                onClick={() => handleCourseNavigate(courseItem?._id)}
+                className="border rounded-lg overflow-hidden shadow cursor-pointer"
+              >
                 <img
                   src={courseItem?.image}
                   width={300}

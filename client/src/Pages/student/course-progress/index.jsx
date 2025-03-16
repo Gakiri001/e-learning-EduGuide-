@@ -123,7 +123,7 @@ function StudentViewCourseProgressPage() {
   }, [currentLecture]);
 
   useEffect(() => {
-    if (showConnfetti) setTimeout(() => setShowConfetti(false), 10000);
+    if (showConnfetti) setTimeout(() => setShowConfetti(false), 15000);
   }, [showConnfetti]);
 
   console.log("currentLecture", currentLecture);
@@ -235,7 +235,7 @@ function StudentViewCourseProgressPage() {
       </Dialog>
 
       <Dialog open={showCourseCompletedDialog}>
-        <DialogContent className="sm:w-[425px]">
+        <DialogContent showOverlay={true} className="sm:w-[425px]">
           <DialogHeader>
             <DialogTitle>Congratulations!!!</DialogTitle>
             <DialogDescription className="flex flex-col gap-3">
