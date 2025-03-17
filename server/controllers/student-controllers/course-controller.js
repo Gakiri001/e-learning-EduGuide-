@@ -99,8 +99,53 @@ const checkCoursePurchaseInfo = async (req, res) => {
   }
 };
 
+const enrollStudentInCourse = async (req, res) => {
+  try {
+    const { studentID, studentName, studentEmail, courseID, paidAmount } =
+      req.body;
+
+    // Find the course
+    const course = await Course.findById(courseID);
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
+    }
+
+    // Check if student is already enrolled
+    const isStudentAlreadyEnrolled = course.students.some(
+      (student) => student.studentID === studentID,
+    );
+    if (isStudentAlreadyEnrolled) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Student already enrolled" });
+    }
+
+    // Add student to the course
+    course.students.push({
+      studentID,
+      studentName,
+      studentEmail,
+      paidAmount,
+    });
+
+    await course.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Student enrolled successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error enrolling student" });
+  }
+};
+
 module.exports = {
   getAllStudentsViewCourses,
   getStudentViewCoursesDetails,
   checkCoursePurchaseInfo,
+  enrollStudentInCourse,
 };

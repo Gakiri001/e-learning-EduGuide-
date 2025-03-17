@@ -18,24 +18,31 @@ const getCoursesByStudentID = async (req, res) => {
 };
 
 //Remember when you are deleting a course from student. Restart you 'studentCourses'in the course-controller.js, Its flikerring and deleting the courseDetails of other courses.
+
 const deleteBoughtCoursesByID = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deletedCourse = await StudentCourses.findByIdAndDelete(id);
-    if (!deletedCourse) {
-      return res.status(404).json({
-        success: false,
-        message: "Course not found",
-      });
+    const { studentId, courseId } = req.params;
+
+    const result = await StudentCourses.findOneAndUpdate(
+      { userID: studentId },
+      { $pull: { courses: { courseID: courseId } } }, // Match courseID instead of _id
+      { new: true }, // Return updated document
+    );
+
+    if (!result) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found or not removed" });
     }
+
     res.status(200).json({
       success: true,
-      message: "Course Deleted Successfully",
-      data: {},
+      message: "Course deleted successfully",
+      data: result,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "some Error Occured" });
+    console.error(error);
+    res.status(500).json({ success: false, message: "Some error occurred" });
   }
 };
 

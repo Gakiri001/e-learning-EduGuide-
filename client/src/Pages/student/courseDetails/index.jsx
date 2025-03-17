@@ -16,6 +16,7 @@ import { studentContext } from "@/Context/student-context";
 import {
   checkCoursePurchaseInfoService,
   createPaymentService,
+  enrollStudentInCourseService,
   fetchStudentViewCourseDetailsService,
 } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
@@ -97,6 +98,35 @@ function StudentViewCourseDetailsPage() {
         JSON.stringify(response?.data?.orderID),
       );
       setApprovalURL(response?.data?.approvalURL);
+
+      // Wait for payment completion, then enroll the student
+      enrollStudent();
+    }
+  }
+
+  // After successful payment, enroll the student
+  async function enrollStudent() {
+    try {
+      const enrollPayload = {
+        studentID: auth?.user?._id,
+        studentName: auth?.user?.userName,
+        studentEmail: auth?.user?.userEmail,
+        courseID: studentViewCoursesDetails?._id,
+        paidAmount: studentViewCoursesDetails?.pricing,
+      };
+
+      const enrollResponse = await enrollStudentInCourseService(enrollPayload);
+      console.log("enrollResponse", enrollResponse);
+      if (enrollResponse.success) {
+        console.log("Student enrolled successfully!");
+        // alert("You have been successfully enrolled in the course!");
+      } else {
+        console.error("Enrollment failed:", enrollResponse.message);
+        // alert("Failed to enroll in the course. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error enrolling student:", error);
+      alert("Error enrolling student. Please try again.");
     }
   }
 

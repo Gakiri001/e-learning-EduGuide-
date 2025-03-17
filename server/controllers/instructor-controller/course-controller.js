@@ -25,7 +25,7 @@ const addNewCourse = async (req, res) => {
 
 const getAllCourses = async (req, res) => {
   try {
-    const courseList = await Course.find();
+    const courseList = await Course.find({});
 
     res.status(200).json({
       success: true,

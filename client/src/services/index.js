@@ -101,6 +101,14 @@ export async function checkCoursePurchaseInfoService(courseid, studentID) {
   return data;
 }
 
+export async function enrollStudentInCourseService(formData) {
+  const { data } = await axiosInstance.post(
+    `/student/course/courses/enroll`,
+    formData,
+  );
+  return data;
+}
+
 //1
 export async function createPaymentService(formData) {
   const { data } = await axiosInstance.post(`/student/order/create`, formData);

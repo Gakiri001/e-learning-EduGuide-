@@ -7,6 +7,6 @@ const {
 const router = express.Router();
 
 router.get("/get/:studentId", getCoursesByStudentID);
-router.delete("/delete/:id", deleteBoughtCoursesByID);
+router.delete("/student/course/:studentId/:courseId", deleteBoughtCoursesByID);
 
 module.exports = router;
