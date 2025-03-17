@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import { DollarSign, Users } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 function InstructorDashboard({ listOfCourses }) {
   function calculateTotalStudentsAndProfit() {
@@ -42,12 +43,12 @@ function InstructorDashboard({ listOfCourses }) {
     {
       icon: Users,
       label: "Total Students",
-      value: 100,
+      value: calculateTotalStudentsAndProfit().totalStudents,
     },
     {
       icon: DollarSign,
       label: "Total Revenue",
-      value: 100,
+      value: calculateTotalStudentsAndProfit().totalProfit,
     },
   ];
 
@@ -68,6 +69,34 @@ function InstructorDashboard({ listOfCourses }) {
           </Card>
         ))}
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Student List</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table className="w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Course Name</TableHead>
+                  <TableHead>Student Name</TableHead>
+                  <TableHead>Student Email</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+        {calculateTotalStudentsAndProfit().studentList.map((studentItem, index) => (
+          <TableRow key={index}>
+            <TableCell className="font-medium">{studentItem.courseTitle}</TableCell>
+            <TableCell>{studentItem.studentName}</TableCell>
+            <TableCell>{studentItem.studentEmail}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
