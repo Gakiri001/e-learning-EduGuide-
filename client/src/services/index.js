@@ -171,3 +171,10 @@ export async function resetCourseProgressService(userId, courseId) {
   );
   return data;
 }
+
+export async function getCoursesRecommendationService(studentId) {
+  const { data } = await axiosInstance.get(
+    `/student/course-recommend/recommend/${studentId}`,
+  );
+  return data;
+}

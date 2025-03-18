@@ -9,6 +9,7 @@ const studentViewCoursesRoutes = require("./routes/student-routes/course-routes"
 const studentViewOrderRoutes = require("./routes/student-routes/order-routes");
 const studentCoursesRoutes = require("./routes/student-routes/student-courses-routes");
 const studentCoursesProgressRoutes = require("./routes/student-routes/course-progress-route");
+const studentcourseRecommendationRoutes = require("./routes/student-routes/course-recommendation-routes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -38,6 +39,7 @@ app.use("/student/course", studentViewCoursesRoutes);
 app.use("/student/order", studentViewOrderRoutes);
 app.use("/student/courses-bought", studentCoursesRoutes);
 app.use("/student/course-progress", studentCoursesProgressRoutes);
+app.use("/student/course-recommend", studentcourseRecommendationRoutes);
 
 //Global Error handler
 app.use((err, req, res, next) => {

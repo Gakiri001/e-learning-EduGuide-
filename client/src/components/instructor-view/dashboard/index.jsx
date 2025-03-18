@@ -1,7 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import { DollarSign, Users } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 function InstructorDashboard({ listOfCourses }) {
   function calculateTotalStudentsAndProfit() {
@@ -85,14 +92,18 @@ function InstructorDashboard({ listOfCourses }) {
               </TableHeader>
 
               <TableBody>
-        {calculateTotalStudentsAndProfit().studentList.map((studentItem, index) => (
-          <TableRow key={index}>
-            <TableCell className="font-medium">{studentItem.courseTitle}</TableCell>
-            <TableCell>{studentItem.studentName}</TableCell>
-            <TableCell>{studentItem.studentEmail}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
+                {calculateTotalStudentsAndProfit().studentList.map(
+                  (studentItem, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">
+                        {studentItem.courseTitle}
+                      </TableCell>
+                      <TableCell>{studentItem.studentName}</TableCell>
+                      <TableCell>{studentItem.studentEmail}</TableCell>
+                    </TableRow>
+                  ),
+                )}
+              </TableBody>
             </Table>
           </div>
         </CardContent>

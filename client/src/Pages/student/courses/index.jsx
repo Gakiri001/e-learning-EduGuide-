@@ -16,6 +16,7 @@ import { studentContext } from "@/Context/student-context";
 import {
   checkCoursePurchaseInfoService,
   fetchStudentViewCourseListService,
+  getCoursesRecommendationService,
 } from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
 import React, { useContext, useState, useEffect } from "react";
@@ -37,6 +38,7 @@ function createSearchParamsHelper(filterParams) {
 function StudentViewCoursesPage() {
   const [sort, setSort] = useState("price-lowtohigh");
   const [filters, setFilters] = useState({});
+  const [recommendedCourses, setRecommendedCourses] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const {
     studentViewCoursesList,
@@ -84,6 +86,14 @@ function StudentViewCoursesPage() {
     }
   }
 
+  async function fetchRecommendedCourses() {
+    if (!auth?.user?._id) return;
+    const response = await getCoursesRecommendationService(auth.user._id);
+    if (response.success) {
+      setRecommendedCourses(response.data);
+    }
+  }
+
   async function handleCourseNavigate(getCurrentCourseID) {
     console.log("getCurrentCourseID", getCurrentCourseID);
     console.log("auth?.user?._id", auth?.user?._id);
@@ -113,9 +123,10 @@ function StudentViewCoursesPage() {
   }, []);
 
   useEffect(() => {
+    fetchRecommendedCourses();
     if (filters !== null && sort !== null)
       fetchAllStudentViewCourses(filters, sort);
-  }, [filters, sort]);
+  }, [filters, sort, auth?.user?._id]);
 
   useEffect(() => {
     return () => {
@@ -126,6 +137,50 @@ function StudentViewCoursesPage() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">All Courses</h1>
+
+      {/* Recommended Courses Section */}
+      {recommendedCourses.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold mb-3">Recommended for You</h2>
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {recommendedCourses.map((course) => (
+              <Card
+                key={course._id}
+                className="cursor-pointer"
+                onClick={() => handleCourseNavigate(course._id)}
+              >
+                <CardContent className="flex gap-4 p-4">
+                  <div className="w-48 h-32 flex-shrink-0">
+                    <img
+                      src={course.image}
+                      className="w-full h-full object-cover"
+                      alt=""
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-xl mb-2">
+                      {course.title}
+                    </CardTitle>
+                    <p className="text-sm text-gray-600">
+                      By:{" "}
+                      <span className="font-bold capitalize">
+                        {course.instructorName}
+                      </span>
+                    </p>
+                    <p className="text-[16px] text-gray-500 mt-3 mb-2">
+                      {course.curriculum.length}{" "}
+                      {course.curriculum.length <= 1 ? "Lecture" : "Lectures"} -{" "}
+                      {course.level.toUpperCase()} Level
+                    </p>
+                    <p className="font-bold text-lg">Ksh {course.pricing}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row gap-4">
         <aside className="w-full md:w-64 space-y-4">
           <div>
